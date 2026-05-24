@@ -41,7 +41,7 @@ except ImportError:
     VERSION = 'Tornado ' + _version
     _GEVENT = False
 
-from . import logger
+from . import logger, constants
 
 
 log = logger.create()
@@ -216,9 +216,10 @@ class WebServer(object):
         try:
             sock, output = self._make_gevent_listener()
             log.info('Starting Gevent server on %s', output)
-            # Also print to stdout so interactive terminals show a clear success message
             try:
-                print(f"Calibre-Web: server started on {output}")
+                # Also print to stdout so interactive terminals show a clear success message
+                if constants.APP_MODE not in ['development', 'test']:
+                    print(f"Calibre-Web: server started on {output}")
             except Exception:
                 print(f"Calibre-Web: error {output}")
                 pass
@@ -274,7 +275,8 @@ class WebServer(object):
             log.info('Starting Tornado server on %s', output)
             # Also print to stdout so interactive terminals show a clear success message
             try:
-                print(f"Calibre-Web: server started on {output}")
+                if constants.APP_MODE not in ['development', 'test']:
+                    print(f"Calibre-Web: server started on {output}")
             except Exception:
                 print(f"Calibre-Web: error {output}")
                 pass
